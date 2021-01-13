@@ -1,0 +1,110 @@
+#pragma once
+
+
+#define DO_ENC_BLOCK(m,k) \
+    do{\
+        m = _mm_xor_si128       (m, k[ 0]); \
+        m = _mm_aesenc_si128    (m, k[ 1]); \
+        m = _mm_aesenc_si128    (m, k[ 2]); \
+        m = _mm_aesenc_si128    (m, k[ 3]); \
+        m = _mm_aesenc_si128    (m, k[ 4]); \
+        m = _mm_aesenc_si128    (m, k[ 5]); \
+        m = _mm_aesenc_si128    (m, k[ 6]); \
+        m = _mm_aesenc_si128    (m, k[ 7]); \
+        m = _mm_aesenc_si128    (m, k[ 8]); \
+        m = _mm_aesenc_si128    (m, k[ 9]); \
+        m = _mm_aesenclast_si128(m, k[10]);\
+    }while(0)
+
+#define DO_DEC_BLOCK(m,k) \
+    do{\
+        m = _mm_xor_si128       (m, k[10+0]); \
+        m = _mm_aesdec_si128    (m, k[10+1]); \
+        m = _mm_aesdec_si128    (m, k[10+2]); \
+        m = _mm_aesdec_si128    (m, k[10+3]); \
+        m = _mm_aesdec_si128    (m, k[10+4]); \
+        m = _mm_aesdec_si128    (m, k[10+5]); \
+        m = _mm_aesdec_si128    (m, k[10+6]); \
+        m = _mm_aesdec_si128    (m, k[10+7]); \
+        m = _mm_aesdec_si128    (m, k[10+8]); \
+        m = _mm_aesdec_si128    (m, k[10+9]); \
+        m = _mm_aesdeclast_si128(m, k[0]);\
+    }while(0)
+
+#define AES_128_key_exp(k, rcon) aes_128_key_expansion(k, _mm_aeskeygenassist_si128(k, rcon))
+
+
+static __m128i aes_128_key_expansion(__m128i key, __m128i keygened){
+    keygened = _mm_shuffle_epi32(keygened, _MM_SHUFFLE(3,3,3,3));
+    key = _mm_xor_si128(key, _mm_slli_si128(key, 4));
+    key = _mm_xor_si128(key, _mm_slli_si128(key, 4));
+    key = _mm_xor_si128(key, _mm_slli_si128(key, 4));
+    return _mm_xor_si128(key, keygened);
+}
+
+//public API
+static void aes128_load_key_enc_only(uint8_t *enc_key, __m128i *key_schedule){
+    key_schedule[0] = _mm_loadu_si128((const __m128i*) enc_key);
+    key_schedule[1]  = AES_128_key_exp(key_schedule[0], 0x01);
+    key_schedule[2]  = AES_128_key_exp(key_schedule[1], 0x02);
+    key_schedule[3]  = AES_128_key_exp(key_schedule[2], 0x04);
+    key_schedule[4]  = AES_128_key_exp(key_schedule[3], 0x08);
+    key_schedule[5]  = AES_128_key_exp(key_schedule[4], 0x10);
+    key_schedule[6]  = AES_128_key_exp(key_schedule[5], 0x20);
+    key_schedule[7]  = AES_128_key_exp(key_schedule[6], 0x40);
+    key_schedule[8]  = AES_128_key_exp(key_schedule[7], 0x80);
+    key_schedule[9]  = AES_128_key_exp(key_schedule[8], 0x1B);
+    key_schedule[10] = AES_128_key_exp(key_schedule[9], 0x36);
+}
+
+static void aes128_load_key(uint8_t *enc_key, __m128i *key_schedule){
+    aes128_load_key_enc_only(enc_key, key_schedule);
+
+    // generate decryption keys in reverse order.
+    // k[10] is shared by last encryption and first decryption rounds
+    // k[0] is shared by first encryption round and last decryption round (and is the original user key)
+    // For some implementation reasons, decryption key schedule is NOT the encryption key schedule in reverse order
+    key_schedule[11] = _mm_aesimc_si128(key_schedule[9]);
+    key_schedule[12] = _mm_aesimc_si128(key_schedule[8]);
+    key_schedule[13] = _mm_aesimc_si128(key_schedule[7]);
+    key_schedule[14] = _mm_aesimc_si128(key_schedule[6]);
+    key_schedule[15] = _mm_aesimc_si128(key_schedule[5]);
+    key_schedule[16] = _mm_aesimc_si128(key_schedule[4]);
+    key_schedule[17] = _mm_aesimc_si128(key_schedule[3]);
+    key_schedule[18] = _mm_aesimc_si128(key_schedule[2]);
+    key_schedule[19] = _mm_aesimc_si128(key_schedule[1]);
+}
+
+//Remember, C has no classes or namespaces
+
+struct Data_Flag
+{
+    /* data */
+    int level_of_importance = 1; //Assume data is important
+    bool flag_on = false;
+    bool tainted = true; //Assume data is tainted
+    char& start_of_segment;
+    char& end_of_segment;
+    char* char_array;
+
+}data_section;
+
+
+
+int label_important_data();
+
+int label_medium_important_data();
+
+int label_unimportant_data(int data_label);
+
+void beginning_or_ending_flip();
+
+
+//_mm_aesenc_si128 for encryption
+void encrypt_section();
+//_mm_aesdec_si128 for decryption
+void decrypt_section();
+
+void sglfence(int security_level); //Should be called with input
+void sglfence(int security_level, char* char_array_to_proc);
+void sglfence(); //Should be called without input

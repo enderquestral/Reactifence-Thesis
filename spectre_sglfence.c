@@ -43,6 +43,11 @@
 #define NOCLFLUSH
 #endif
 
+
+#ifdef SGLFENCE_MITIGATION
+#include <sglfence.h>
+#endif
+
 /********************************************************************
 Victim code.
 ********************************************************************/
@@ -109,6 +114,15 @@ void victim_function(size_t x) {
 		 */
 		_mm_lfence();
 #endif
+
+#ifdef SGLFENCE_MITIGATION
+    /*
+    * Add a flag here for custom flag code
+    */
+
+   
+#endif
+
 #ifdef LINUX_KERNEL_MITIGATION
     x &= array_index_mask_nospec(x, array1_size);
 #endif
@@ -356,6 +370,12 @@ int main(int argc,
   #else
     printf("INTEL_MITIGATION_DISABLED ");
   #endif
+  #ifdef SGLFENCE_MITIGATION
+    printf("SGLFENCE_MITIGATION_ENABLED ");
+  #else
+    printf("SGLFENCE_MITIGATION_DISABLED ");
+  #endif
+
   #ifdef LINUX_KERNEL_MITIGATION
     printf("LINUX_KERNEL_MITIGATION_ENABLED ");
   #else
