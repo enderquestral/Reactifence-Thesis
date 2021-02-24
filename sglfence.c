@@ -18,6 +18,7 @@ Ideas:
 
 **********************************************************************/
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <stdint.h> 
 #include <string.h>     //for memcm
@@ -45,13 +46,14 @@ int label_important_data(){
     {
         //There's really not much else to do, as I think this dooms all following commands from here on involved with this input to be serialized.
         //to mess with this more might require doing this with volatile threads, lfencing them and then combining their work together later. 
-        break;
+        return;
         
     }
     else
     {
         _mm_lfence();
         //Memory is synchronized but also now immune to preemptive execution
+        //No way to turn off lfence really unless the script ends up executing.
     }
     
 
@@ -88,7 +90,7 @@ int label_unimportant_data(){
     }
     */
 
-
+   return;
 }
 
 
@@ -191,7 +193,7 @@ void sglfence(int security_level){//This should be called whenever the flag is c
 
 //Needs to store/protect a char *[] ???
 //Thankfully, arrays are stored sequentially
-void sglfence(int security_level, char* char_array_to_proc){//This should be called whenever the flag is called... with input of level and specific array to protect
+void sglfence(int security_level, const char* char_array_to_proc){//This should be called whenever the flag is called... with input of level and specific array to protect
     //security_level is 0, 1, or 2
 
     if (data_section.flag_on)
@@ -202,7 +204,8 @@ void sglfence(int security_level, char* char_array_to_proc){//This should be cal
     else{
         data_section.level_of_importance = security_level;
         data_section.flag_on = true;
-        data_section.char_array = char_array_to_proc;
+        //memcpy(data_section.char_array, char_array_to_proc, sizeof(data_section.char_array));
+        strcpy(data_section.char_array, char_array_to_proc);
         //= (char*)malloc(sizeof(char_array_to_protect)*sizeof(char));
         beginning_or_ending_flip(security_level);
     }

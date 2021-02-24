@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdbool.h>
 
 #define DO_ENC_BLOCK(m,k) \
     do{\
@@ -79,10 +79,9 @@ static void aes128_load_key(uint8_t *enc_key, __m128i *key_schedule){
 
 struct Data_Flag
 {
-    /* data */
     int level_of_importance = 1; //Assume data is important
-    bool flag_on = false;
-    bool tainted = true; //Assume data is tainted
+    int flag_on = 0;
+    int tainted = 1; //Assume data is tainted
     char& start_of_segment;
     char& end_of_segment;
     char* char_array;
@@ -95,7 +94,7 @@ int label_important_data();
 
 int label_medium_important_data();
 
-int label_unimportant_data(int data_label);
+int label_unimportant_data();
 
 void beginning_or_ending_flip();
 

@@ -1,12 +1,13 @@
-# sglfence-Thesis
-(Written by Hannah Hellerstein for an undergraduate thesis at Reed College for the department of Computer Science.)
+# SGLfence-Thesis
+Written by Hannah Hellerstein for an undergraduate thesis at Reed College for the department of Computer Science. 
+For the associated paper please see here: \[INSERT LINK HERE\].
 
 (Code taken from @crozone's SpectrePoC, @CSL-KU's SpectreGuard, and @sebastien-riou's aes-brute-force)
 
-Refrencing: https://spectreattack.com/spectre.pdf 
-Initial creation of a repo for a new Spectre variant 1 (CVE-2017-5753) defense that is a software-centric lfence replacement alternative. Implementation is inspired by SpectreGuard
+Initial creation of a repo for a new Spectre variant 1 (CVE-2017-5753) defense that is a software-centric lfence replacement alternative. Implementation is inspired by SpectreGuard.
 
-NOTE: At the time of writing, this thesis is not entirely functional. It is a work in progress. 
+NOTE: At the time of writing, this thesis project is not entirely functional. It is a work in progress/open to edits. 
+
 
 ## The Logic behind this implementation
 
@@ -16,16 +17,13 @@ Ideally, this separation of importances should lead to an amount of speedup pres
 
 ## Results 
 
-\[SECTION PENDING\]
+\[SECTION PENDING ON COMPLETED CODE\]
 
 ## Building
 
 First, run the MakeFile in this repo. This is required for all functions to be available. 
-If you wish to test with your own Spectre benchmark, make sure to include <sglfence.h> and if needed, have the flag SGLFENCE_MITIGATION, as seen in spectre_sglfence . 
-
-As for how to run it against Spectre Defences SpectreGuard and InvisiSpec (Thanks again @CSL-KU https://github.com/CSL-KU/SpectreGuard) then do the following:
-
-\[SECTION PENDING\]
+If you wish to test with your own Spectre benchmark, make sure to include <sglfence.h> and if needed, have the flag SGLFENCE_MITIGATION, as seen in spectre_sglfence. And that should be all that is reqired.
+NOTE: This designed only for x86 machines.
 
 ## Executing
 
@@ -40,5 +38,15 @@ Run `./test_spectre_sglfence` if you wish to see this proposed defence alone.
 ### On Synthetic Benchmarks:
 (Note: Due to various reasons, this program has not been tested on the Spec2006 benchmarks as seen in the SpectreGuard repo.) 
 
-\[SECTION PENDING\]
 
+## Citations
+
+Yan, Mengjia. Mjyan0720/InvisiSpec-1.0. 2018. 2020. GitHub, https://github.com/mjyan0720/InvisiSpec-1.0.
+
+Crosby, Ryan. Crozone/SpectrePoC. 2018. 2020. GitHub, https://github.com/crozone/SpectrePoC.
+
+sebastien-riou. Sebastien-Riou/Aes-Brute-Force. 2017. 2021. GitHub, https://github.com/sebastien-riou/aes-brute-force.
+
+CSL-KU/SpectreGuard. 2019. CSL-KU, 2020. GitHub, https://github.com/CSL-KU/SpectreGuard.
+
+Meltdown and Spectre. https://spectreattack.com/. Accessed 23 Sept. 2020. https://spectreattack.com/spectre.pdf 
