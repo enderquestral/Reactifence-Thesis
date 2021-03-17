@@ -104,6 +104,6 @@ void encrypt_section();
 //_mm_aesdec_si128 for decryption
 void decrypt_section();
 
-void sglfence(int security_level); //Should be called with input
-void sglfence(int security_level, char* char_array_to_proc);
-void sglfence(); //Should be called without input
+void reactifence(int security_level); //Should be called with input
+void reactifence(int security_level, char* char_array_to_proc);
+void reactifence(); //Should be called without input

@@ -1,4 +1,4 @@
-# SGLfence-Thesis
+# Reactifence-Thesis
 Written by Hannah Hellerstein for an undergraduate thesis at Reed College for the department of Computer Science. 
 For the associated paper please see here: \[INSERT LINK HERE\].
 
@@ -22,7 +22,7 @@ Ideally, this separation of importances should lead to an amount of speedup pres
 ## Building
 
 First, run the MakeFile in this repo. This is required for all functions to be available. 
-If you wish to test with your own Spectre benchmark, make sure to include <sglfence.h> and if needed, have the flag SGLFENCE_MITIGATION, as seen in spectre_sglfence. And that should be all that is reqired.
+If you wish to test with your own Spectre benchmark, make sure to include <reactifence.h> and if needed, have the flag REACTIFENCE_MITIGATION, as seen in spectre_reactifence. And that should be all that is reqired.
 NOTE: This designed only for x86 machines.
 
 ## Executing
@@ -32,7 +32,7 @@ Once everything has been compiled, there are three options:
 
 Run `./test_spectre` if you wish to see spectre running with no mitigations.  
 Run `./test_spectre_lfence` if you wish to see spectre running against Intel's proposed strategy of using lfences.   
-Run `./test_spectre_sglfence` if you wish to see this proposed defence alone. 
+Run `./test_spectre_reactifence` if you wish to see this proposed defence alone. 
 
 
 ### On Synthetic Benchmarks:

@@ -44,8 +44,8 @@
 #endif
 
 
-#ifdef SGLFENCE_MITIGATION
-#include <sglfence.h>
+#ifdef REACTIFENCE_MITIGATION
+#include <reactifence.h>
 #endif
 
 /********************************************************************
@@ -115,7 +115,7 @@ void victim_function(size_t x) {
 		_mm_lfence();
 #endif
 
-#ifdef SGLFENCE_MITIGATION
+#ifdef REACTIFENCE_MITIGATION
     /*
     * Add a flag here for custom flag code
     */
@@ -370,10 +370,10 @@ int main(int argc,
   #else
     printf("INTEL_MITIGATION_DISABLED ");
   #endif
-  #ifdef SGLFENCE_MITIGATION
-    printf("SGLFENCE_MITIGATION_ENABLED ");
+  #ifdef REACTIFENCE_MITIGATION
+    printf("REACTIFENCE_MITIGATION_ENABLED ");
   #else
-    printf("SGLFENCE_MITIGATION_DISABLED ");
+    printf("REACTIFENCE_MITIGATION_DISABLED ");
   #endif
 
   #ifdef LINUX_KERNEL_MITIGATION

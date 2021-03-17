@@ -1,6 +1,6 @@
 /*********************************************************************
 *
-* Library of SGLfence: A library aiming to add a better software-based solution to preventing spectre leakage
+* Library of Reactifence: A library aiming to add a better software-based solution to preventing spectre leakage
 * 
 * Taking inspiration from SpectreGuard, InvisiSpec, SafeSpec, oo7
 * 
@@ -26,7 +26,7 @@ Ideas:
 #include <memory.h> //These include FetchChar, FetchInt, FetchLong, FetchFloat, StoreChar, StoreInt, StoreLong, and StoreFloat. To move blocks of data from one location to another in paged or common RAM, use the CmoveMany, CmoveManyCheck, or ToMemory routines.
 #include <x86intrin.h> // for _mm_lfence();
 #include <immintrin.h>
-#include "sglfence.h"
+#include "reactifence.h"
 #include "c_language_hashtable.h"
 //#include <eeprom.c> 
 
@@ -99,7 +99,7 @@ int label_unimportant_data(){
 //_eeprom should allow for read-only memory
 //Make all values in the section established Volatile so its in RAM?
 
-//readMemoryByte in spectre_sglfence to see how to read memory byte
+//readMemoryByte in spectre_reactifence to see how to read memory byte
 //   flush_memory_sse AND _mm_clflush ????
 
 // http://www.mosaic-industries.com/embedded-systems/sbc-single-board-computers/hcs12-9s12-freescale-development-board/c-application-programming
@@ -174,7 +174,7 @@ void decrypt_section(uint8_t cipher_text[], uint8_t enc_key[]){
 //sfence is like loadfence but storing. mfence is loading and storing
 //Needs to store/protect a char *[] ???
 //Thankfully, arrays are stored sequentially
-void sglfence(int security_level){//This should be called whenever the flag is called... with input on security level but not what exactly to protect
+void reactifence(int security_level){//This should be called whenever the flag is called... with input on security level but not what exactly to protect
     //security_level is 0, 1, or 2
     
     if (data_section.flag_on)
@@ -193,7 +193,7 @@ void sglfence(int security_level){//This should be called whenever the flag is c
 
 //Needs to store/protect a char *[] ???
 //Thankfully, arrays are stored sequentially
-void sglfence(int security_level, const char* char_array_to_proc){//This should be called whenever the flag is called... with input of level and specific array to protect
+void reactifence(int security_level, const char* char_array_to_proc){//This should be called whenever the flag is called... with input of level and specific array to protect
     //security_level is 0, 1, or 2
 
     if (data_section.flag_on)
@@ -213,7 +213,7 @@ void sglfence(int security_level, const char* char_array_to_proc){//This should 
 }
 
 
-void sglfence(){//This should be called whenever the flag is called... without input. So, should be end of section.
+void reactifence(){//This should be called whenever the flag is called... without input. So, should be end of section.
     if (data_section.flag_on)
     {
         printf("You need to add a security level of 0, 1, or 2.");
