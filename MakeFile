@@ -1,0 +1,38 @@
+CC=gcc
+CFLAGS= -std=c99 -g -Wall -Wextra -Werror -pedantic -pthread -O0
+INTELFLAGS=-DINTEL_MITIGATION
+
+all: test_spectre test_spectre_lfence test_spectre_reactifence reactifence_lib
+
+#Spectre attack w/o any defenses
+test_spectre: spectre_reactifence.c
+	$(CC) $(CFLAGS) -o $@ $^	
+
+#Spectre attack w/ lfence stopping
+test_spectre_lfence: spectre_reactifence.c 
+	$(CC) $(CFLAGS) $(INTELFLAGS) -o $@ $^
+
+#Spectre attack w/ (ideally) our defense
+test_spectre_reactifence: spectre_reactifence.c reactifence.c
+	$(CC) $(CFLAGS) -o $@ $^		
+
+reactifence_lib: reactifence.c
+	$ ar -rc libreactifence.a reactifence.o #
+#https://medium.com/@eightlimbed/how-to-create-and-use-a-c-static-library-eec33d502aeb
+
+clean:
+	-rm -rf *.o test_spectre
+	-rm -rf *.o test_spectre_lfence
+	-rm -rf *.o test_spectre_reactifence
+
+test:
+	./test_spectre > no_defence_spectre_outputs.txt
+	./test_spectre_lfence > lfence_spectre_outputs.txt
+	./test_spectre_reactifence > new_defence_spectre_outputs.txt	
+
+
+valgrind:
+	valgrind ./test_spectre > no_defence_spectre_outputs.txt
+	valgrind ./test_spectre_lfence > lfence_spectre_outputs.txt
+	valgrind ./test_spectre_reactifence > new_defence_spectre_outputs.txt
+#gdb it to debug?
