@@ -1,6 +1,6 @@
 # Reactifence-Thesis
 Written by Hannah Hellerstein for an undergraduate thesis at Reed College for the department of Computer Science. 
-For the associated paper please see here: \[INSERT LINK HERE\].
+For the associated paper please see here: [Where’s My Proton Pack?: Defending Against Spectre Variant 1](https://rdc.reed.edu/c/etheses/s/r?_pp=20&query=Hannah%20Hellerstein&s=e6ce880f6d459a4d2bb2dff20c8feae062a29882&p=4&pp=1)
 
 (Code taken from @crozone's SpectrePoC, @CSL-KU's SpectreGuard, and @sebastien-riou's aes-brute-force)
 
@@ -17,7 +17,7 @@ Ideally, this separation of importances should lead to an amount of speedup pres
 
 ## Results 
 
-\[SECTION PENDING ON COMPLETED CODE\]
+As of 2021, no new defense was implemented unfortunately, instead the thesis evaluating the ups and downs of existing defenses. 
 
 ## Building
 
